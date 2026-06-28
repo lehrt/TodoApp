@@ -27,7 +27,6 @@ A full-stack todo management application built with .NET 10 and React 19, featur
   - Proper ARIA labels and semantic HTML
   - Full keyboard navigation support\*
   - Screen reader friendly
-- **Sortable Data Grid**: Sort todos by name, created date, or due date
 - **Visual Indicators**: Overdue todos highlighted in red
 
 > \*Upon experimentation, the keyboard accessibility for selecting actions buttons in the column rows is not fully intuitive. Accessing Actions button requires keying down, then up again to be able to access button options. This seems to be a limitation of Fluent 9 however, and requires overengineered solutions outside the scope of this demo.
@@ -57,10 +56,12 @@ Before running this application, ensure you have the following installed:
 - **Node.js**: v26 or later ([Download](https://nodejs.org/en/download/current))
 - **.NET SDK**: .NET 10.0 or later ([Download](https://dotnet.microsoft.com/download))
 - **Git**: For cloning the repository ([Download](https://git-scm.com/))
+- **Visual Studio 2026**: Latest version with dotnet 10 support ([Download](https://visualstudio.microsoft.com/downloads/))
 
-#### Optional but Recommended for DB Debugging
+#### Optional but Recommended
 
-- **SQLite and SQL Server Compact Toolbox**: Latest version ([Download](https://marketplace.visualstudio.com/items?itemName=ErikEJ.SQLServerCompactSQLiteToolbox))
+- **SQLite and SQL Server Compact Toolbox**: Latest version for DB Debugging ([Download](https://marketplace.visualstudio.com/items?itemName=ErikEJ.SQLServerCompactSQLiteToolbox))
+- **Visual Studio Code**: For hosting frontend ([Download](https://code.visualstudio.com/download?_exp_download=fb315fc982))
 
 ## Getting Started
 
@@ -72,6 +73,8 @@ cd TodoApp
 ```
 
 ### 2. Backend Setup
+
+It is recommended to use Visual Studio 2026 to host this backend service. Visual Studio Code will likely not work.
 
 Navigate to the backend directory and restore dependencies:
 
@@ -99,6 +102,8 @@ The API will be available at:
 
 ### 3. Frontend Setup
 
+It is recommended to use Visual Studio Code to host the frontend service, though Visual Studio may work just as well.
+
 Open a new terminal window and navigate to the frontend directory:
 
 ```bash
@@ -121,7 +126,7 @@ The frontend will be available at `http://localhost:3000`
 
 ### 4. Access the Application
 
-Open your browser and navigate to `http://localhost:3000` to start using the TodoApp!
+Open your browser and navigate to `http://localhost:3000` to start using the TodoApp.
 
 ## API Endpoints
 
