@@ -32,14 +32,24 @@ namespace ToDoApp.Controllers
         [HttpPost]
         public ActionResult<TodoDto> CreateTodo(TodoCreationDto todoCreationDto)
         {
+            var createdDate = DateTime.Now;
+
+            // Calculate due date from either absolute or relative format
+            var calculatedDueDate = DueDateHelper.CalculateDueDate(
+                todoCreationDto.DueDate,
+                todoCreationDto.RelativeDueDateValue,
+                todoCreationDto.RelativeDueDateUnit,
+                createdDate
+            );
+
             var maxId = ToDoDataStore.Current.ToDos.Max(c => c.Id);
             var finalTodo = new TodoDto()
             {
                 Id = ++maxId,
                 Name = todoCreationDto.Name,
                 AdditionalDetails = todoCreationDto.AdditionalDetails,
-                CreatedDate = DateTime.Now,
-                DueDate = todoCreationDto.DueDate
+                CreatedDate = createdDate,
+                DueDate = calculatedDueDate
             };
             ToDoDataStore.Current.ToDos.Add(finalTodo);
             return CreatedAtAction("GetTodos", new { id = finalTodo.Id }, finalTodo);
@@ -55,9 +65,18 @@ namespace ToDoApp.Controllers
                 return NotFound();
             }
 
+            // Calculate due date from either absolute or relative format
+            // Use current time as base for updates
+            var calculatedDueDate = DueDateHelper.CalculateDueDate(
+                todoUpdateDto.DueDate,
+                todoUpdateDto.RelativeDueDateValue,
+                todoUpdateDto.RelativeDueDateUnit,
+                DateTime.Now
+            );
+
             selectedToDo.Name = todoUpdateDto.Name;
             selectedToDo.AdditionalDetails = todoUpdateDto.AdditionalDetails;
-            selectedToDo.DueDate = todoUpdateDto.DueDate;
+            selectedToDo.DueDate = calculatedDueDate;
 
             return NoContent();
         }

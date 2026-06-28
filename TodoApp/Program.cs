@@ -1,3 +1,7 @@
+using TodoApp.Services;
+using TodoApp.DbContexts;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -5,6 +9,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers().AddNewtonsoftJson();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddTransient<LocalMailService>();
+builder.Services.AddHostedService<DueDateNotificationService>();
+builder.Services.AddDbContext<TodoContext>(dbContextOptions => 
+    dbContextOptions.UseSqlite("Data Source=CityInfo.db")
+);
 
 var app = builder.Build();
 
