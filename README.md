@@ -195,3 +195,49 @@ npm run lint
 
 - API proxy is configured in `vite.config.ts` to forward `/api` requests to `http://localhost:5025`
 - Development server runs on port 3000
+
+## Future Work
+
+This project is currently in demo/proof-of-concept stage. The following enhancements are planned for future iterations:
+
+### 1. Accessibility Improvements
+
+- **DataGrid Keyboard Navigation**: Improve keyboard accessibility for the actions menu buttons in the todo list
+  - Current limitation: Accessing the actions button requires non-intuitive key combinations (down arrow, then up arrow)
+  - This appears to be a Fluent UI 9 limitation that requires custom solutions beyond the scope of this demo
+- **Enhanced ARIA Support**: Expand ARIA labels and live regions throughout the application
+- **Focus Management**: Improve focus trap handling in modals and dialogs
+
+### 2. Email Notification Service
+
+- **SMTP Integration**: Replace the simulated console-based email service with a real email server
+  - Configure SMTP server credentials (e.g., SendGrid, AWS SES, or Azure Communication Services)
+  - Implement HTML email templates for reminder notifications
+  - Add email delivery tracking and error handling
+- **Notification Preferences**: Allow users to customize reminder timing and frequency
+- **Multiple Notification Channels**: Extend beyond email to support SMS or push notifications
+
+### 3. Security Enhancements
+
+- **Azure Key Vault Integration**: Move sensitive configuration out of source code
+  - Store database connection strings in Azure Key Vault
+  - Implement secure credential retrieval for SMTP settings
+  - Use managed identities for authentication in Azure environments
+- **Environment-Specific Configuration**: Properly separate development, staging, and production configurations
+  - Currently, the connection string is hardcoded in `Program.cs` for demo convenience
+  - Production deployments should use secure secret management
+- **Authentication & Authorization**: Add user authentication to secure todo data
+  - **Current Limitation**: All users currently see all todos in the system (no user isolation)
+  - Implement user registration and login system
+  - Store user identity (e.g., email address) with each todo in the database
+  - Filter todos by authenticated user to show only their own tasks
+  - Implement proper authorization checks at the API level to prevent unauthorized access
+
+### 4. Additional Features
+
+- **Todo Categories/Tags**: Organize todos with labels and categories
+- **Search and Filter**: Advanced search and filtering capabilities
+- **Bulk Operations**: Select and manage multiple todos at once
+- **Data Export**: Export todos to CSV, JSON, or PDF formats
+- **Recurring Todos**: Support for repeating tasks
+- **Mobile Responsiveness**: Optimize UI for mobile devices and tablets
