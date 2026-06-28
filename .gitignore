@@ -408,3 +408,4 @@ FodyWeavers.xsd
 # Personal files
 github-recovery-codes.txt
 *.htm
+settings.local.json

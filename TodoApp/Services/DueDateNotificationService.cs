@@ -73,15 +73,6 @@ namespace TodoApp.Services
                 );
                 _logger.LogInformation("Sent due reminder for todo {TodoId}: {TodoName} (Due: {DueDate})", 
                     todo.Id, todo.Name, todo.DueDate);
-
-                // Clear the due date after sending to avoid repeat notifications
-                todo.DueDate = null;
-            }
-
-            // Save changes if any due dates were cleared
-            if (dueTodos.Count > 0)
-            {
-                await context.SaveChangesAsync();
             }
 
             // Send upcoming reminders

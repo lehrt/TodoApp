@@ -11,9 +11,20 @@ builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddOpenApi();
 builder.Services.AddTransient<LocalMailService>();
 builder.Services.AddHostedService<DueDateNotificationService>();
-builder.Services.AddDbContext<TodoContext>(dbContextOptions => 
+builder.Services.AddDbContext<TodoContext>(dbContextOptions =>
     dbContextOptions.UseSqlite("Data Source=TodoInfo.db")
 );
+
+// Add CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 
 var app = builder.Build();
 
@@ -24,6 +35,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowReactApp");
 
 app.UseAuthorization();
 
