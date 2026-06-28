@@ -12,7 +12,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddTransient<LocalMailService>();
 builder.Services.AddHostedService<DueDateNotificationService>();
 builder.Services.AddDbContext<TodoContext>(dbContextOptions => 
-    dbContextOptions.UseSqlite("Data Source=CityInfo.db")
+    dbContextOptions.UseSqlite("Data Source=TodoInfo.db")
 );
 
 var app = builder.Build();

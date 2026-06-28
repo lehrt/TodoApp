@@ -1,5 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using TodoApp.DbContexts;
 using TodoApp.Models;
-using ToDoApp;
 using ToDoApp.Models;
 
 namespace TodoApp.Services
@@ -29,7 +30,7 @@ namespace TodoApp.Services
             {
                 try
                 {
-                    CheckAndSendDueDateReminders();
+                    await CheckAndSendDueDateRemindersAsync();
                     await Task.Delay(_checkInterval, stoppingToken);
                 }
                 catch (Exception ex)
@@ -43,24 +44,25 @@ namespace TodoApp.Services
             _logger.LogInformation("Due Date Notification Service stopped at {Time}", DateTime.Now);
         }
 
-        private void CheckAndSendDueDateReminders()
+        private async Task CheckAndSendDueDateRemindersAsync()
         {
             using var scope = _serviceProvider.CreateScope();
             var mailService = scope.ServiceProvider.GetRequiredService<LocalMailService>();
+            var context = scope.ServiceProvider.GetRequiredService<TodoContext>();
 
             var now = DateTime.Now;
 
             // Find todos that are due (due date has passed or is right now)
-            var dueTodos = ToDoDataStore.Current.ToDos
+            var dueTodos = await context.Todos
                 .Where(t => t.DueDate.HasValue && t.DueDate.Value <= now)
-                .ToList();
+                .ToListAsync();
 
             // Find todos due within the next minute (upcoming reminders)
-            var upcomingTodos = ToDoDataStore.Current.ToDos
+            var upcomingTodos = await context.Todos
                 .Where(t => t.DueDate.HasValue && 
                             t.DueDate.Value > now && 
                             t.DueDate.Value <= now.AddMinutes(1))
-                .ToList();
+                .ToListAsync();
 
             // Send reminders for todos that are now due
             foreach (var todo in dueTodos)
@@ -74,6 +76,12 @@ namespace TodoApp.Services
 
                 // Clear the due date after sending to avoid repeat notifications
                 todo.DueDate = null;
+            }
+
+            // Save changes if any due dates were cleared
+            if (dueTodos.Count > 0)
+            {
+                await context.SaveChangesAsync();
             }
 
             // Send upcoming reminders

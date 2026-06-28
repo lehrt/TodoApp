@@ -24,7 +24,7 @@ namespace TodoApp.Entities
             get; set;
         }
 
-        public Todo(string name, string additionalDetails)
+        public Todo(string name)
         {
             Name = name;
         }

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.OpenApi;
+using Microsoft.EntityFrameworkCore;
+using TodoApp.DbContexts;
+using TodoApp.Entities;
 using TodoApp.Models;
 using ToDoApp.Models;
 using Microsoft.AspNetCore.JsonPatch;
@@ -10,27 +12,54 @@ namespace ToDoApp.Controllers
     [Route("api/[controller]")]
     public class ToDosController : ControllerBase
     {
-        [HttpGet]
-        public ActionResult<IEnumerable<TodoDto>> GetTodos()
+        private readonly TodoContext _context;
+
+        public ToDosController(TodoContext context)
         {
-            return Ok(ToDoDataStore.Current.ToDos);
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<TodoDto>>> GetTodos()
+        {
+            var todos = await _context.Todos.ToListAsync();
+
+            var todoDtos = todos.Select(t => new TodoDto
+            {
+                Id = t.Id,
+                Name = t.Name,
+                AdditionalDetails = t.AdditionalDetails,
+                CreatedDate = t.CreatedDate,
+                DueDate = t.DueDate
+            });
+
+            return Ok(todoDtos);
         }
 
         [HttpGet("{id}", Name="GetTodos")]
-        public ActionResult<TodoDto> GetTodo(int id)
+        public async Task<ActionResult<TodoDto>> GetTodo(int id)
         {
-            var selectedToDo = ToDoDataStore.Current.ToDos.FirstOrDefault(c => c.Id == id);
+            var selectedTodo = await _context.Todos.FirstOrDefaultAsync(t => t.Id == id);
 
-            if (selectedToDo == null)
+            if (selectedTodo == null)
             {
                 return NotFound();
             }
 
-            return Ok(selectedToDo);
+            var todoDto = new TodoDto
+            {
+                Id = selectedTodo.Id,
+                Name = selectedTodo.Name,
+                AdditionalDetails = selectedTodo.AdditionalDetails,
+                CreatedDate = selectedTodo.CreatedDate,
+                DueDate = selectedTodo.DueDate
+            };
+
+            return Ok(todoDto);
         }
 
         [HttpPost]
-        public ActionResult<TodoDto> CreateTodo(TodoCreationDto todoCreationDto)
+        public async Task<ActionResult<TodoDto>> CreateTodo(TodoCreationDto todoCreationDto)
         {
             var createdDate = DateTime.Now;
 
@@ -42,25 +71,34 @@ namespace ToDoApp.Controllers
                 createdDate
             );
 
-            var maxId = ToDoDataStore.Current.ToDos.Max(c => c.Id);
-            var finalTodo = new TodoDto()
+            var newTodo = new Todo(todoCreationDto.Name)
             {
-                Id = ++maxId,
-                Name = todoCreationDto.Name,
                 AdditionalDetails = todoCreationDto.AdditionalDetails,
                 CreatedDate = createdDate,
                 DueDate = calculatedDueDate
             };
-            ToDoDataStore.Current.ToDos.Add(finalTodo);
-            return CreatedAtAction("GetTodos", new { id = finalTodo.Id }, finalTodo);
+
+            _context.Todos.Add(newTodo);
+            await _context.SaveChangesAsync();
+
+            var todoDto = new TodoDto
+            {
+                Id = newTodo.Id,
+                Name = newTodo.Name,
+                AdditionalDetails = newTodo.AdditionalDetails,
+                CreatedDate = newTodo.CreatedDate,
+                DueDate = newTodo.DueDate
+            };
+
+            return CreatedAtAction("GetTodos", new { id = todoDto.Id }, todoDto);
         }
 
         [HttpPut("{id}")]
-        public ActionResult<TodoDto> UpdateTodo(int id, TodoDtoUpdateDto todoUpdateDto)
+        public async Task<ActionResult> UpdateTodo(int id, TodoDtoUpdateDto todoUpdateDto)
         {
-            var selectedToDo = ToDoDataStore.Current.ToDos.FirstOrDefault(c => c.Id == id);
+            var selectedTodo = await _context.Todos.FirstOrDefaultAsync(t => t.Id == id);
 
-            if (selectedToDo == null)
+            if (selectedTodo == null)
             {
                 return NotFound();
             }
@@ -74,27 +112,29 @@ namespace ToDoApp.Controllers
                 DateTime.Now
             );
 
-            selectedToDo.Name = todoUpdateDto.Name;
-            selectedToDo.AdditionalDetails = todoUpdateDto.AdditionalDetails;
-            selectedToDo.DueDate = calculatedDueDate;
+            selectedTodo.Name = todoUpdateDto.Name;
+            selectedTodo.AdditionalDetails = todoUpdateDto.AdditionalDetails;
+            selectedTodo.DueDate = calculatedDueDate;
+
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
         [HttpPatch("{id}")]
-        public ActionResult<TodoDto> PatchDto(int id, JsonPatchDocument<TodoDtoUpdateDto> patchDocument)
+        public async Task<ActionResult> PatchDto(int id, JsonPatchDocument<TodoDtoUpdateDto> patchDocument)
         {
-            var selectedToDo = ToDoDataStore.Current.ToDos.FirstOrDefault(c => c.Id == id);
-            if (selectedToDo == null)
+            var selectedTodo = await _context.Todos.FirstOrDefaultAsync(t => t.Id == id);
+            if (selectedTodo == null)
             {
                 return NotFound();
             }
 
             var todoToPatch = new TodoDtoUpdateDto()
             {
-                Name = selectedToDo.Name,
-                AdditionalDetails = selectedToDo.AdditionalDetails,
-                DueDate = selectedToDo.DueDate
+                Name = selectedTodo.Name,
+                AdditionalDetails = selectedTodo.AdditionalDetails,
+                DueDate = selectedTodo.DueDate
             };
 
             patchDocument.ApplyTo(todoToPatch, ModelState);
@@ -109,22 +149,27 @@ namespace ToDoApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            selectedToDo.Name = todoToPatch.Name;
-            selectedToDo.AdditionalDetails = todoToPatch.AdditionalDetails;
-            selectedToDo.DueDate = todoToPatch.DueDate;
+            selectedTodo.Name = todoToPatch.Name;
+            selectedTodo.AdditionalDetails = todoToPatch.AdditionalDetails;
+            selectedTodo.DueDate = todoToPatch.DueDate;
+
+            await _context.SaveChangesAsync();
+
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public ActionResult DeleteTodo(int id)
+        public async Task<ActionResult> DeleteTodo(int id)
         {
-            var selectedToDo = ToDoDataStore.Current.ToDos.FirstOrDefault(c => c.Id == id);
-                if (selectedToDo == null)
-                {
-                    return NotFound();
-                }
+            var selectedTodo = await _context.Todos.FirstOrDefaultAsync(t => t.Id == id);
+            if (selectedTodo == null)
+            {
+                return NotFound();
+            }
 
-                ToDoDataStore.Current.ToDos.Remove(selectedToDo);
+            _context.Todos.Remove(selectedTodo);
+            await _context.SaveChangesAsync();
+
             return NoContent();
         }
     }
