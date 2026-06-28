@@ -1,15 +1,14 @@
-﻿namespace ToDoApp.Models
-{
-    public class TodoDto
-    {
-        public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public string AdditionalDetails { get; set; }
+﻿using System.ComponentModel.DataAnnotations;
 
-        public DateTime CreatedDate
-        {
-            get; set;
-        }
+namespace ToDoApp.Models
+{
+    public class TodoDtoUpdateDto
+    {
+        [Required]
+        [MaxLength(50)]
+        public string Name { get; set; } = string.Empty;
+        [MaxLength(200)]
+        public string AdditionalDetails { get; set; }
 
         public DateTime? DueDate
         {

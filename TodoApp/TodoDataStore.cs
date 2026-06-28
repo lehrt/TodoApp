@@ -17,7 +17,7 @@ namespace ToDoApp
                 {
                     Id = 1,
                     Name = "Test",
-                    Description = "Test Description",
+                    AdditionalDetails = "Test Description",
                     CreatedDate = DateTime.Now,
                     DueDate = DateTime.Now.AddDays(7)
                 },
@@ -25,7 +25,7 @@ namespace ToDoApp
                 {
                     Id = 2,
                     Name = "Test2",
-                    Description = "Test Description 2",
+                    AdditionalDetails = "Test Description 2",
                     CreatedDate = DateTime.Now,
                     DueDate = DateTime.Now.AddDays(7)
                 },
@@ -33,7 +33,7 @@ namespace ToDoApp
                 {
                     Id = 3,
                     Name = "Test3",
-                    Description = "Test Description 3",
+                    AdditionalDetails = "Test Description 3",
                     CreatedDate = DateTime.Now,
                     DueDate = DateTime.Now.AddDays(7)
                 }
