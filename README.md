@@ -15,6 +15,8 @@ A full-stack todo management application built with .NET 10 and React 19, featur
 - **Background Notifications**: Automated due date notification service
 - **Data Persistence**: SQLite database with Entity Framework Core
 
+> **Note**: The mail notification service is currently simulated for demo purposes. Email notifications are logged to the console via `Console.WriteLine` instead of being sent through an actual mail server. This allows the notification functionality to be demonstrated without requiring SMTP configuration.
+
 ### User Experience
 
 - **Modern UI**: Built with Microsoft Fluent UI 9 design system
