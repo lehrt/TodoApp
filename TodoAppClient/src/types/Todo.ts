@@ -4,4 +4,5 @@ export interface Todo {
   additionalDetails: string;
   createdDate: string;
   dueDate: string | null;
+  remindersEnabled: boolean;
 }

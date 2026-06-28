@@ -24,6 +24,8 @@ namespace TodoApp.Entities
             get; set;
         }
 
+        public bool RemindersEnabled { get; set; } = true;
+
         public Todo(string name)
         {
             Name = name;

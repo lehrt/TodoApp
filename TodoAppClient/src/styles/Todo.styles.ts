@@ -19,6 +19,35 @@ export const useTodoListStyles = makeStyles({
 	card: {
 		width: "100%",
 	},
+	cardHeaderActions: {
+		display: "flex",
+		alignItems: "center",
+		gap: tokens.spacingHorizontalS,
+	},
+	dialogContent: {
+		display: "flex",
+		flexDirection: "column",
+		gap: tokens.spacingVerticalM,
+		minWidth: "420px",
+	},
+	createTodoForm: {
+		display: "flex",
+		flexDirection: "column",
+		gap: tokens.spacingVerticalM,
+	},
+	modeSelector: {
+		display: "flex",
+		flexDirection: "column",
+		gap: tokens.spacingVerticalXS,
+	},
+	relativeRow: {
+		display: "grid",
+		gridTemplateColumns: "1fr 1fr",
+		gap: tokens.spacingHorizontalM,
+	},
+	formErrorText: {
+		color: tokens.colorPaletteRedForeground1,
+	},
 	errorText: {
 		color: tokens.colorPaletteRedForeground1,
 	},

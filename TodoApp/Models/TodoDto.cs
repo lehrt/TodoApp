@@ -15,5 +15,7 @@
         {
             get; set;
         }
+
+        public bool RemindersEnabled { get; set; }
     }
 }

@@ -27,5 +27,10 @@ namespace ToDoApp.Models
         /// Must be used together with RelativeDueDateValue.
         /// </summary>
         public TimeUnit? RelativeDueDateUnit { get; set; }
+
+        /// <summary>
+        /// Whether to send reminder emails for this todo.
+        /// </summary>
+        public bool RemindersEnabled { get; set; } = true;
     }
 }

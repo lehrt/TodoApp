@@ -30,13 +30,14 @@ namespace ToDoApp.Controllers
                 Name = t.Name,
                 AdditionalDetails = t.AdditionalDetails,
                 CreatedDate = t.CreatedDate,
-                DueDate = t.DueDate
+                DueDate = t.DueDate,
+                RemindersEnabled = t.RemindersEnabled
             });
 
             return Ok(todoDtos);
         }
 
-        [HttpGet("{id}", Name="GetTodos")]
+        [HttpGet("{id}", Name = "GetTodos")]
         public async Task<ActionResult<TodoDto>> GetTodo(int id)
         {
             var selectedTodo = await _context.Todos.FirstOrDefaultAsync(t => t.Id == id);
@@ -52,7 +53,8 @@ namespace ToDoApp.Controllers
                 Name = selectedTodo.Name,
                 AdditionalDetails = selectedTodo.AdditionalDetails,
                 CreatedDate = selectedTodo.CreatedDate,
-                DueDate = selectedTodo.DueDate
+                DueDate = selectedTodo.DueDate,
+                RemindersEnabled = selectedTodo.RemindersEnabled
             };
 
             return Ok(todoDto);
@@ -75,7 +77,8 @@ namespace ToDoApp.Controllers
             {
                 AdditionalDetails = todoCreationDto.AdditionalDetails,
                 CreatedDate = createdDate,
-                DueDate = calculatedDueDate
+                DueDate = calculatedDueDate,
+                RemindersEnabled = todoCreationDto.RemindersEnabled
             };
 
             _context.Todos.Add(newTodo);
@@ -87,7 +90,8 @@ namespace ToDoApp.Controllers
                 Name = newTodo.Name,
                 AdditionalDetails = newTodo.AdditionalDetails,
                 CreatedDate = newTodo.CreatedDate,
-                DueDate = newTodo.DueDate
+                DueDate = newTodo.DueDate,
+                RemindersEnabled = newTodo.RemindersEnabled
             };
 
             return CreatedAtAction("GetTodos", new { id = todoDto.Id }, todoDto);
@@ -115,6 +119,7 @@ namespace ToDoApp.Controllers
             selectedTodo.Name = todoUpdateDto.Name;
             selectedTodo.AdditionalDetails = todoUpdateDto.AdditionalDetails;
             selectedTodo.DueDate = calculatedDueDate;
+            selectedTodo.RemindersEnabled = todoUpdateDto.RemindersEnabled;
 
             await _context.SaveChangesAsync();
 
@@ -134,7 +139,8 @@ namespace ToDoApp.Controllers
             {
                 Name = selectedTodo.Name,
                 AdditionalDetails = selectedTodo.AdditionalDetails,
-                DueDate = selectedTodo.DueDate
+                DueDate = selectedTodo.DueDate,
+                RemindersEnabled = selectedTodo.RemindersEnabled
             };
 
             patchDocument.ApplyTo(todoToPatch, ModelState);
@@ -144,7 +150,7 @@ namespace ToDoApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            if(!TryValidateModel(todoToPatch))
+            if (!TryValidateModel(todoToPatch))
             {
                 return BadRequest(ModelState);
             }
@@ -152,6 +158,7 @@ namespace ToDoApp.Controllers
             selectedTodo.Name = todoToPatch.Name;
             selectedTodo.AdditionalDetails = todoToPatch.AdditionalDetails;
             selectedTodo.DueDate = todoToPatch.DueDate;
+            selectedTodo.RemindersEnabled = todoToPatch.RemindersEnabled;
 
             await _context.SaveChangesAsync();
 

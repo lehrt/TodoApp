@@ -52,14 +52,15 @@ namespace TodoApp.Services
 
             var now = DateTime.Now;
 
-            // Find todos that are due (due date has passed or is right now)
+            // Find todos that are due (due date has passed or is right now) and have reminders enabled
             var dueTodos = await context.Todos
-                .Where(t => t.DueDate.HasValue && t.DueDate.Value <= now)
+                .Where(t => t.RemindersEnabled && t.DueDate.HasValue && t.DueDate.Value <= now)
                 .ToListAsync();
 
-            // Find todos due within the next minute (upcoming reminders)
+            // Find todos due within the next minute (upcoming reminders) and have reminders enabled
             var upcomingTodos = await context.Todos
-                .Where(t => t.DueDate.HasValue && 
+                .Where(t => t.RemindersEnabled && 
+                            t.DueDate.HasValue && 
                             t.DueDate.Value > now && 
                             t.DueDate.Value <= now.AddMinutes(1))
                 .ToListAsync();
