@@ -198,15 +198,13 @@ npm run lint
 
 ## Future Work
 
-This project is currently in demo/proof-of-concept stage. The following enhancements are planned for future iterations:
+This project is currently in demo/proof-of-concept stage. The following enhancements are known limitations that would be addressed in future iterations if this project was funded:
 
 ### 1. Accessibility Improvements
 
 - **DataGrid Keyboard Navigation**: Improve keyboard accessibility for the actions menu buttons in the todo list
   - Current limitation: Accessing the actions button requires non-intuitive key combinations (down arrow, then up arrow)
   - This appears to be a Fluent UI 9 limitation that requires custom solutions beyond the scope of this demo
-- **Enhanced ARIA Support**: Expand ARIA labels and live regions throughout the application
-- **Focus Management**: Improve focus trap handling in modals and dialogs
 
 ### 2. Email Notification Service
 
