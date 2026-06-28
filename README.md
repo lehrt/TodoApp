@@ -53,7 +53,8 @@ A full-stack todo management application built with .NET 10 and React 19, featur
 
 Before running this application, ensure you have the following installed:
 
-- **Node.js**: v26 or later ([Download](https://nodejs.org/en/download/current))
+- **Npm CLI**: v11 or later, use NVM ([Download](https://github.com/coreybutler/nvm-windows))
+- **Node.js**: v26 or later (`nvm install 26` then `nvm use 26`)
 - **.NET SDK**: .NET 10.0 or later ([Download](https://dotnet.microsoft.com/download))
 - **Git**: For cloning the repository ([Download](https://git-scm.com/))
 - **Visual Studio 2026**: Latest version with dotnet 10 support ([Download](https://visualstudio.microsoft.com/downloads/))
@@ -81,6 +82,7 @@ Navigate to the backend directory and restore dependencies:
 ```bash
 cd TodoApp
 dotnet restore
+dotnet tool install --global dotnet-ef
 ```
 
 Apply database migrations to create the SQLite database:
